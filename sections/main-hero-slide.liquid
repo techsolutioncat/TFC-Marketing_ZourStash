@@ -1,0 +1,354 @@
+<!-- Swiper -->
+<div class="main-hero-slide-wrapper{% if section.settings.fullscreen == false %} section{% endif %}{% if section.settings.fullscreen %} main-hero-slide-wrapper--fullscreen{% endif %}">
+    <div class="swiper main-hero-swiper{% if section.settings.fullscreen %} main-hero-swiper--fullscreen{% endif %}" {{ section.shopify_attributes }}>
+    <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+        {% if block.type == 'image' and block.settings.image != blank %}
+            <div class="swiper-slide" {{ block.shopify_attributes }}>
+            {{
+                block.settings.image
+                | image_url: width: 1920
+                | image_tag: loading: 'lazy', class: 'swiper-slide__image', alt: block.settings.image.alt | default: 'Hero slide'
+            }}
+            {% if block.settings.heading != blank or block.settings.text != blank or block.settings.button_label != blank %}
+                <div class="swiper-slide__content">
+                {% if block.settings.heading != blank %}
+                    <h2 class="swiper-slide__heading"{% if block.settings.heading_color != blank %} style="color: {{ block.settings.heading_color }};"{% endif %}>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                    <p class="swiper-slide__text"{% if block.settings.text_color != blank %} style="color: {{ block.settings.text_color }};"{% endif %}>{{ block.settings.text }}</p>
+                {% endif %}
+                {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                    <a href="{{ block.settings.button_link }}" class="swiper-slide__button"{% if block.settings.button_text_color != blank or block.settings.button_background_color != blank or block.settings.button_border_radius != blank or block.settings.button_padding_top != blank or block.settings.button_padding_bottom != blank or block.settings.button_padding_left != blank or block.settings.button_padding_right != blank or block.settings.button_hover_background_color != blank %} style="{% if block.settings.button_text_color != blank %}color: {{ block.settings.button_text_color }};{% endif %}{% if block.settings.button_background_color != blank %}background-color: {{ block.settings.button_background_color }};{% endif %}{% if block.settings.button_border_radius != blank %}border-radius: {{ block.settings.button_border_radius }}px;{% endif %}{% if block.settings.button_padding_top != blank or block.settings.button_padding_bottom != blank or block.settings.button_padding_left != blank or block.settings.button_padding_right != blank %}padding: {{ block.settings.button_padding_top | default: 12 }}px {{ block.settings.button_padding_right | default: 24 }}px {{ block.settings.button_padding_bottom | default: 12 }}px {{ block.settings.button_padding_left | default: 24 }}px;{% endif %}{% if block.settings.button_hover_background_color != blank %}--button-hover-bg: {{ block.settings.button_hover_background_color }};{% endif %}"{% endif %}>
+                    {{ block.settings.button_label }}
+                    </a>
+                {% endif %}
+                </div>
+            {% endif %}
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+{% stylesheet %}
+  #shopify-section-{{ section.id }} .main-hero-slide-wrapper {
+    width: 100%;
+    position: relative;
+    height: 450px;
+  }
+
+      #shopify-section-{{ section.id }} .main-hero-slide-wrapper--fullscreen {
+        height: 600px;
+    }
+
+  #shopify-section-{{ section.id }} .main-hero-swiper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    max-width: 90%;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__text {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-slide__button:hover {
+    background-color: var(--button-hover-bg, #333);
+  }
+
+    #shopify-section-{{ section.id }} .main-hero-slide-wrapper--fullscreen {
+        height: 600px;
+    }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .swiper-slide__heading {
+      font-size: 1.75rem;
+    }
+
+    #shopify-section-{{ section.id }} .swiper-slide__text {
+      font-size: 1rem;
+    }
+
+    #shopify-section-{{ section.id }} .main-hero-slide-wrapper {
+        height: 350px;
+    }
+
+    #shopify-section-{{ section.id }} .main-hero-slide-wrapper--fullscreen {
+        height: 450px;
+    }
+  }
+
+  @media (max-width: 599px) {
+
+    #shopify-section-{{ section.id }} .main-hero-slide-wrapper {
+        height: 270px;
+    }
+
+    #shopify-section-{{ section.id }} .main-hero-slide-wrapper--fullscreen {
+        height: 300px;
+    }
+  }
+{% endstylesheet %}
+
+<!-- Initialize Swiper -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swiperConfig = {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: true,
+      pagination: {
+        el: '#shopify-section-{{ section.id }} .swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '#shopify-section-{{ section.id }} .swiper-button-next',
+        prevEl: '#shopify-section-{{ section.id }} .swiper-button-prev',
+      },
+    };
+
+    {% if section.settings.autoplay %}
+      swiperConfig.autoplay = {
+        delay: {{ section.settings.autoplay_delay | default: 3000 }},
+        disableOnInteraction: false,
+      };
+    {% endif %}
+
+    var swiper = new Swiper('#shopify-section-{{ section.id }} .main-hero-swiper', swiperConfig);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Main hero slide",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "fullscreen",
+      "label": "Fullscreen",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay (s)",
+      "min": 1000,
+      "max": 9000,
+      "step": 500,
+      "default": 3000,
+      "unit": "ms",
+      "visible_if": "{{ section.settings.autoplay }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Slide heading"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Slide description text"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "header",
+          "content": "Button Style"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_background_color",
+          "label": "Button background color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "button_hover_background_color",
+          "label": "Button hover background color"
+        },
+        {
+          "type": "range",
+          "id": "button_border_radius",
+          "label": "Button border radius",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "button_padding_top",
+          "label": "Button padding top",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "button_padding_bottom",
+          "label": "Button padding bottom",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "button_padding_left",
+          "label": "Button padding left",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "default": 24
+        },
+        {
+          "type": "range",
+          "id": "button_padding_right",
+          "label": "Button padding right",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "default": 24
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main hero slide",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "heading": "Welcome to Our Store",
+            "text": "Discover amazing products and great deals",
+            "button_label": "Shop Now",
+            "button_link": "/collections/all"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "heading": "New Collection",
+            "text": "Check out our latest arrivals",
+            "button_label": "Explore",
+            "button_link": "/collections/all"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "heading": "Special Offers",
+            "text": "Limited time deals you don't want to miss",
+            "button_label": "Shop Now",
+            "button_link": "/collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
