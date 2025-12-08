@@ -1,0 +1,266 @@
+{% liquid
+  assign background_color = section.settings.background_color | default: '#FFFFFF'
+  assign text_color = section.settings.text_color | default: '#000000'
+%}
+
+<div
+  class="faq-wrapper{% if section.settings.full_width == false %} section{% endif %}"
+  style="
+    background-color: {{ background_color }};
+    padding-top: {{ section.settings.padding_top | default: 60 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | default: 60 }}px;
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="faq-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="faq-heading" style="color: {{ text_color }};">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="faq-list">
+        {% for block in section.blocks %}
+          {% if block.type == 'question_answer' %}
+            <div class="faq-item" {{ block.shopify_attributes }}>
+              <button
+                class="faq-question"
+                type="button"
+                aria-expanded="false"
+              >
+                <span class="faq-question-text" style="color: {{ text_color }};">{{ block.settings.question }}</span>
+                <span class="faq-toggle" aria-hidden="true">+</span>
+              </button>
+              <div class="faq-answer" hidden>
+                <div class="faq-answer-content" style="color: {{ text_color }};">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="faq-empty">
+        <p style="color: {{ text_color }};">Add FAQ blocks to display questions and answers.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% style %}
+  #shopify-section-{{ section.id }} .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  #shopify-section-{{ section.id }} .faq-heading {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 32px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .faq-item {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  }
+
+  #shopify-section-{{ section.id }} .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .faq-question:focus-visible {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .faq-question:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  #shopify-section-{{ section.id }} .faq-toggle {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    color: #4CAF50;
+  }
+
+  #shopify-section-{{ section.id }} .faq-answer {
+    padding: 0 18px 16px;
+  }
+
+  #shopify-section-{{ section.id }} .faq-answer-content {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  #shopify-section-{{ section.id }} .faq-empty {
+    text-align: center;
+    padding: 24px;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .faq-heading {
+      font-size: 26px;
+      margin-bottom: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .faq-question {
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .faq-answer-content {
+      font-size: 15px;
+    }
+  }
+{% endstyle %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionEl = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!sectionEl) return;
+
+    const items = sectionEl.querySelectorAll('.faq-item');
+    items.forEach((item) => {
+      const button = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      const toggle = item.querySelector('.faq-toggle');
+
+      if (!button || !answer || !toggle) return;
+
+      button.addEventListener('click', () => {
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', (!isOpen).toString());
+        answer.hidden = isOpen;
+        toggle.textContent = isOpen ? '+' : '–';
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question_answer",
+      "name": "Question & Answer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What makes Zour Stash different?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We balance bold flavor with compliant, lab-tested ingredients for a product customers love.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "What makes Zour Stash different?",
+            "answer": "<p>We balance bold flavor with compliant, lab-tested ingredients for a product customers love.</p>"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "Are your products lab tested?",
+            "answer": "<p>Yes. Every batch is lab tested and COAs are available for full transparency.</p>"
+          }
+        },
+        {
+          "type": "question_answer",
+          "settings": {
+            "question": "Do you offer wholesale?",
+            "answer": "<p>We support wholesale partners. Contact us for pricing, MOQs, and merchandising support.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
