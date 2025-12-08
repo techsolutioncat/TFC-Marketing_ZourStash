@@ -1,0 +1,405 @@
+{% liquid
+  assign background_color = section.settings.background_color | default: '#FFEB3B'
+  assign text_color = section.settings.text_color | default: '#000000'
+  assign autoplay_enabled = section.settings.autoplay
+  assign autoplay_delay = section.settings.autoplay_delay | default: 5000
+%}
+
+<div class="testimonial-slider-wrapper{% if section.settings.full_width == false %} section{% endif %}" style="background-color: {{ background_color }};" {{ section.shopify_attributes }}>
+  <div class="testimonial-slider-container">
+    {% if section.blocks.size > 0 %}
+      <div class="swiper testimonial-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'testimonial' %}
+              <div class="swiper-slide" {{ block.shopify_attributes }}>
+                <div class="testimonial-card">
+                  {% if block.settings.customer_image != blank %}
+                    <div class="client-info">
+                        <div class="testimonial-avatar">
+                        {{
+                            block.settings.customer_image
+                            | image_url: width: 120
+                            | image_tag: loading: 'lazy', class: 'avatar-image', alt: block.settings.customer_name | default: 'Customer'
+                        }}
+                        </div>
+                        {% if block.settings.customer_name != blank %}
+                        <div class="testimonial-author">
+                            <div class="author-name" style="color: {{ text_color }};">{{ block.settings.customer_name }}</div>
+                            {% if block.settings.customer_title != blank %}
+                            <div class="author-title" style="color: {{ text_color }};">{{ block.settings.customer_title }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                  {% else %}
+                    <div class="testimonial-avatar testimonial-avatar--placeholder">
+                      {{ 'user' | placeholder_svg_tag: 'avatar-placeholder' }}
+                    </div>
+                  {% endif %}
+                  
+                  <div class="testimonial-content">
+                    <div class="testimonial-bubble">
+                      <p class="testimonial-text" style="color: {{ text_color }};">
+                        {{ block.settings.testimonial_text }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    {% else %}
+      <div class="testimonial-empty">
+        <p>Add testimonial blocks to display customer reviews</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% style %}
+  #shopify-section-{{ section.id }} .testimonial-slider-wrapper {
+    width: 100%;
+    padding: 80px 20px;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-slider-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-swiper {
+    width: 100%;
+    padding: 40px 60px;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-avatar {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #ffffff;
+    border: 3px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-avatar--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+  }
+
+  #shopify-section-{{ section.id }} .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .avatar-placeholder {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-content {
+    flex: 1;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-bubble {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-bubble::before {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: 40px;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-text {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 600;
+    font-style: italic;
+    margin: 0;
+    color: #000000;
+  }
+
+  #shopify-section-{{ section.id }} .author-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000000;
+  }
+
+  #shopify-section-{{ section.id }} .author-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-button-next,
+  #shopify-section-{{ section.id }} .swiper-button-prev {
+    color: #000000;
+    width: 40px;
+    height: 40px;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-button-next::after,
+  #shopify-section-{{ section.id }} .swiper-button-prev::after {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-pagination {
+    bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: #d0d0d0;
+    opacity: 1;
+    margin: 0 4px;
+  }
+
+  #shopify-section-{{ section.id }} .swiper-pagination-bullet-active {
+    background: #4CAF50;
+  }
+
+  #shopify-section-{{ section.id }} .testimonial-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .testimonial-slider-wrapper {
+      padding: 60px 15px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-swiper {
+      padding: 30px 40px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-card {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-avatar {
+      width: 80px;
+      height: 80px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-bubble {
+      padding: 20px 25px;
+      margin-bottom: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-bubble::before {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-text {
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-author {
+      margin-left: 0;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .swiper-button-next,
+    #shopify-section-{{ section.id }} .swiper-button-prev {
+      width: 30px;
+      height: 30px;
+    }
+
+    #shopify-section-{{ section.id }} .swiper-button-next::after,
+    #shopify-section-{{ section.id }} .swiper-button-prev::after {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .testimonial-swiper {
+      padding: 20px 30px;
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-text {
+      font-size: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .author-name {
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .author-title {
+      font-size: 14px;
+    }
+  }
+{% endstyle %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var swiperConfig = {
+      slidesPerView: 1,
+      spaceBetween: 30,
+      loop: true,
+      pagination: {
+        el: '#shopify-section-{{ section.id }} .swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '#shopify-section-{{ section.id }} .swiper-button-next',
+        prevEl: '#shopify-section-{{ section.id }} .swiper-button-prev',
+      },
+    };
+
+    {% if autoplay_enabled %}
+      swiperConfig.autoplay = {
+        delay: {{ autoplay_delay }},
+        disableOnInteraction: false,
+      };
+    {% endif %}
+
+    var swiper = new Swiper('#shopify-section-{{ section.id }} .testimonial-swiper', swiperConfig);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Testimonial Slider",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFEB3B"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Slider Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay",
+      "min": 1000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "default": 5000,
+      "visible_if": "{{ section.settings.autoplay }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "testimonial_text",
+          "label": "Testimonial text",
+          "default": "We couldn't be happier that we found this product for our smoke shop! It's a total game-changer—customers love it, and it moves fast."
+        },
+        {
+          "type": "image_picker",
+          "id": "customer_image",
+          "label": "Customer image",
+          "info": "Optional profile picture"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "Paul"
+        },
+        {
+          "type": "text",
+          "id": "customer_title",
+          "label": "Customer title",
+          "default": "Owner"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial Slider",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial_text": "We couldn't be happier that we found this product for our smoke shop! It's a total game-changer—customers love it, and it moves fast. The packaging really pops on our shelves, grabbing attention instantly, and the gravity boxes make it easy to display without taking up too much space.",
+            "customer_name": "Paul",
+            "customer_title": "Owner"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
