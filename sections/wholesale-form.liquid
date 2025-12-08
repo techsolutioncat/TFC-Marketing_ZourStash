@@ -1,0 +1,312 @@
+{% liquid
+  assign background_color = section.settings.background_color | default: '#E5FF00'
+  assign text_color = section.settings.text_color | default: '#000000'
+  assign button_bg = section.settings.button_bg | default: '#FF1F6F'
+  assign button_text = section.settings.button_text | default: '#FFFFFF'
+%}
+
+<div
+  class="wholesale-form-wrapper{% if section.settings.full_width == false %} section{% endif %}"
+  style="
+    background-color: {{ background_color }};
+    color: {{ text_color }};
+    padding-top: {{ section.settings.padding_top | default: 60 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | default: 60 }}px;
+  "
+  {{ section.shopify_attributes }}
+>
+  <div class="wholesale-form-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="wholesale-form-heading" style="color: {{ text_color }};">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p class="wholesale-form-subheading" style="color: {{ text_color }};">{{ section.settings.subheading }}</p>
+    {% endif %}
+    {% if section.settings.subheading_2 != blank %}
+      <p class="wholesale-form-subheading" style="color: {{ text_color }};">{{ section.settings.subheading_2 }}</p>
+    {% endif %}
+
+    {% form 'contact', class: 'wholesale-form' %}
+      <input type="hidden" name="contact[form_type]" value="wholesale">
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="WholesaleFirstName">{{ 'First Name' }}</label>
+          <input
+            id="WholesaleFirstName"
+            type="text"
+            name="contact[first_name]"
+            placeholder="First name"
+            required
+          >
+        </div>
+        <div class="form-field">
+          <label for="WholesaleLastName">{{ 'Last Name' }}</label>
+          <input
+            id="WholesaleLastName"
+            type="text"
+            name="contact[last_name]"
+            placeholder="Last name"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="WholesalePhone">{{ 'Phone Number' }}</label>
+          <input
+            id="WholesalePhone"
+            type="tel"
+            name="contact[phone]"
+            placeholder="Phone number"
+            required
+          >
+        </div>
+        <div class="form-field">
+          <label for="WholesaleEmail">{{ 'Email' }}</label>
+          <input
+            id="WholesaleEmail"
+            type="email"
+            name="contact[email]"
+            placeholder="Email"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="WholesaleBusiness">{{ 'Business Name' }}</label>
+          <input
+            id="WholesaleBusiness"
+            type="text"
+            name="contact[company]"
+            placeholder="Business name"
+            required
+          >
+        </div>
+        <div class="form-field">
+          <label for="WholesaleState">{{ 'State' }}</label>
+          <select id="WholesaleState" name="contact[state]" required>
+            <option value="" disabled selected>Select state</option>
+            <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option><option value="AR">AR</option><option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DE">DE</option><option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option><option value="ID">ID</option><option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option><option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option><option value="ME">ME</option><option value="MD">MD</option><option value="MA">MA</option><option value="MI">MI</option><option value="MN">MN</option><option value="MS">MS</option><option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option><option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option><option value="NY">NY</option><option value="NC">NC</option><option value="ND">ND</option><option value="OH">OH</option><option value="OK">OK</option><option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option><option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option><option value="UT">UT</option><option value="VT">VT</option><option value="VA">VA</option><option value="WA">WA</option><option value="WV">WV</option><option value="WI">WI</option><option value="WY">WY</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row single">
+        <div class="form-field">
+          <label for="WholesaleMessage">{{ 'Message' }}</label>
+          <textarea
+            id="WholesaleMessage"
+            name="contact[body]"
+            rows="4"
+            placeholder="Tell us about your business or any questions you have"
+            required
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="wholesale-submit" style="background-color: {{ button_bg }}; color: {{ button_text }};">
+          {{ section.settings.button_label | default: 'Submit' }}
+        </button>
+      </div>
+    {% endform %}
+  </div>
+</div>
+
+{% style %}
+  #shopify-section-{{ section.id }} .wholesale-form-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-form-heading {
+    font-size: 46px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: 0 0 18px;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-form-subheading {
+    text-align: center;
+    margin: 0 0 6px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 32px;
+  }
+
+  #shopify-section-{{ section.id }} .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .form-row.single {
+    grid-template-columns: 1fr;
+  }
+
+  #shopify-section-{{ section.id }} .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #shopify-section-{{ section.id }} label {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  #shopify-section-{{ section.id }} input,
+  #shopify-section-{{ section.id }} select,
+  #shopify-section-{{ section.id }} textarea {
+    width: 100%;
+    border: 1px solid #cccccc;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 0;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  #shopify-section-{{ section.id }} input:focus,
+  #shopify-section-{{ section.id }} select:focus,
+  #shopify-section-{{ section.id }} textarea:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 0;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-submit {
+    width: 100%;
+    border: none;
+    padding: 14px 18px;
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-submit:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+
+  #shopify-section-{{ section.id }} .wholesale-submit:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 960px) {
+    #shopify-section-{{ section.id }} .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    #shopify-section-{{ section.id }} .wholesale-form-heading {
+      font-size: 36px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Wholesale Form",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wholesale Form"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading line 1",
+      "default": "Interested in setting up a wholesale account? Simply fill out the form below."
+    },
+    {
+      "type": "text",
+      "id": "subheading_2",
+      "label": "Subheading line 2",
+      "default": "Once your account is approved, our sales team will reach out directly."
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#E5FF00"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background color",
+      "default": "#FF1F6F"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Submit"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Form"
+    }
+  ]
+}
+{% endschema %}
+
