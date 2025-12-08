@@ -1,0 +1,297 @@
+{% liquid
+  assign background_color = section.settings.background_color | default: '#FFEB3B'
+  assign icon_size = section.settings.icon_size | default: 120
+  assign text_color = section.settings.text_color | default: '#000000'
+%}
+
+<div class="icon-list-wrapper{% if section.settings.full_width == false %} section{% endif %}" style="background-color: {{ background_color }};" {{ section.shopify_attributes }}>
+  <div class="icon-list-container">
+    {% if section.blocks.size > 0 %}
+      <div class="icon-list-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'icon' %}
+            <div class="icon-item" {{ block.shopify_attributes }}>
+              {% if block.settings.icon_image != blank %}
+                <div class="icon-circle" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                  {{
+                    block.settings.icon_image
+                    | image_url: width: icon_size
+                    | image_tag: loading: 'lazy', class: 'icon-image', alt: block.settings.top_text | default: 'Icon'
+                  }}
+                </div>
+              {% else %}
+                <div class="icon-circle icon-circle--placeholder" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                  {{ 'image' | placeholder_svg_tag: 'icon-placeholder' }}
+                </div>
+              {% endif %}
+              
+              {% if block.settings.top_text != blank or block.settings.bottom_text != blank %}
+                <div class="icon-text">
+                  {% if block.settings.top_text != blank %}
+                    <div class="icon-text-top" style="color: {{ text_color }};">{{ block.settings.top_text }}</div>
+                  {% endif %}
+                  {% if block.settings.bottom_text != blank %}
+                    <div class="icon-text-bottom" style="color: {{ text_color }};">{{ block.settings.bottom_text }}</div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="icon-list-empty">
+        <p>Add icon blocks to display icons</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% style %}
+    #shopify-section-{{ section.id }} .icon-list-wrapper {
+    width: 100%;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+    }
+
+  #shopify-section-{{ section.id }} .icon-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .icon-list-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  #shopify-section-{{ section.id }} .icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 0 0 auto;
+    max-width: 200px;
+  }
+
+  #shopify-section-{{ section.id }} .icon-circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .icon-circle--placeholder {
+    border:solid 1px #333333;
+  }
+
+  #shopify-section-{{ section.id }} .icon-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .icon-placeholder {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+
+  #shopify-section-{{ section.id }} .icon-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .icon-text-top,
+  #shopify-section-{{ section.id }} .icon-text-bottom {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #shopify-section-{{ section.id }} .icon-text-top {
+    margin-bottom: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .icon-list-empty {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+
+  @media (max-width: 768px) {
+
+    #shopify-section-{{ section.id }} .icon-item {
+      max-width: 150px;
+    }
+
+    #shopify-section-{{ section.id }} .icon-circle {
+      width: 100px;
+      height: 100px;
+      padding: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .icon-text-top,
+    #shopify-section-{{ section.id }} .icon-text-bottom {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+
+    #shopify-section-{{ section.id }} .icon-item {
+      max-width: 120px;
+    }
+
+    #shopify-section-{{ section.id }} .icon-circle {
+      width: 80px;
+      height: 80px;
+      padding: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .icon-text-top,
+    #shopify-section-{{ section.id }} .icon-text-bottom {
+      font-size: 11px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Icon List",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFEB3B"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 80,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image",
+          "info": "Upload a white/light colored icon image. It will be displayed on a black circle."
+        },
+        {
+          "type": "text",
+          "id": "top_text",
+          "label": "Top text",
+          "default": "FARM BILL"
+        },
+        {
+          "type": "text",
+          "id": "bottom_text",
+          "label": "Bottom text",
+          "default": "COMPLIANT"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon List",
+      "blocks": [
+        {
+          "type": "icon",
+          "settings": {
+            "top_text": "FARM BILL",
+            "bottom_text": "COMPLIANT"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "top_text": "HEMP",
+            "bottom_text": "DERIVED"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "top_text": "HIGHEST",
+            "bottom_text": "QUALITY FLOWER"
+          }
+        },
+        {
+          "type": "icon",
+          "settings": {
+            "top_text": "LAB",
+            "bottom_text": "TESTED"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
