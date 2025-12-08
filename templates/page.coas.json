@@ -1,9 +1,86 @@
 {
-    "sections": {
-        "main": {
-            "type": "faq",
-            "settings": {}
+  "sections": {
+    "main": {
+      "type": "faq",
+      "blocks": {
+        "question_answer_UR4zdb": {
+          "type": "question_answer",
+          "settings": {
+            "question": "THCA FLOWER",
+            "answer": "<p>TROPICAL – CLICK TO VIEW<br\/>JUICY PEACH – CLICK TO VIEW<br\/>STRAWBERRY LEMONADE – CLICK TO VIEW<br\/>BLUE RASPBERRY LEMONADE – CLICK TO VIEW<br\/>WATERMELON – CLICK TO VIEW<br\/>GRAPE BUBBLEGUM – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_zhtGar": {
+          "type": "question_answer",
+          "settings": {
+            "question": "10CT\/2CT COATED PRE-ROLLS",
+            "answer": "<p>TROPICAL – CLICK TO VIEW<br\/>JUICY PEACH – CLICK TO VIEW<br\/>STRAWBERRY LEMONADE – CLICK TO VIEW<br\/>BLUE RASPBERRY LEMONADE – CLICK TO VIEW<br\/>WATERMELON – CLICK TO VIEW<br\/>GRAPE BUBBLEGUM – CLICK TO VIEW<br\/>CITRUS SUNBURST – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_xmJzd9": {
+          "type": "question_answer",
+          "settings": {
+            "question": "2CT PRE-ROLL SLEEVE",
+            "answer": "<p>BLUE RASPBERRY LEMONADE – CLICK TO VIEW<br\/>GRAPE BUBBLEGUM – CLICK TO VIEW<br\/>CITRUS SUNBURST – CLICK TO VIEW<br\/>STRAWBERRY LEMONADE – CLICK TO VIEW<br\/>WATERMELON BLAST – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_wUX78T": {
+          "type": "question_answer",
+          "settings": {
+            "question": "THCP HASH HOLE",
+            "answer": "<p>BERRY BLAST – CLICK TO VIEW<br\/>BUBBLEGUM – CLICK TO VIEW<br\/>SOUR WATERMELON – CLICK TO VIEW<br\/>STRAWBERRY PUNCH – CLICK TO VIEW<br\/>CHERRY LIME – CLICK TO VIEW<br\/>ELECTRIC LEMONADE – CLICK TO VIEW<br\/>CITRUS SUNBURST – CLICK TO VIEW<br\/>GRAPE BUBBLEGUM – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_AtMH9T": {
+          "type": "question_answer",
+          "settings": {
+            "question": "THCA HA$HIEZ",
+            "answer": "<p>BLUE RASPBERRY – CLICK TO VIEW<br\/>SOUR STRAWBERRY – CLICK TO VIEW<br\/>WATERMELON BLAST – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_4pcbPX": {
+          "type": "question_answer",
+          "settings": {
+            "question": "1G THCA VAPE",
+            "answer": "<p>BLUEBERRY CREAM – CLICK TO VIEW<br\/>CHERRY COTTON CANDY – CLICK TO VIEW<br\/>STRAWBERRY BUBBLEGUM – CLICK TO VIEW<br\/>WATERMELON MARSHMALLOW – CLICK TO VIEW<br\/>PARADISE PUNCH – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_VEXALn": {
+          "type": "question_answer",
+          "settings": {
+            "question": "ZOUR BITES",
+            "answer": "<p>CHERRY LIME – CLICK TO VIEW<br\/>STRAWBERRY WATERMELON – CLICK TO VIEW<\/p>"
+          }
+        },
+        "question_answer_ACTBTz": {
+          "type": "question_answer",
+          "settings": {
+            "question": "ZOUR DREAM",
+            "answer": "<p>SOUR BLUEBERRY – CLICK TO VIEW<br\/>SOUR WATERMELON – CLICK TO VIEW<br\/>SOUR CHERRY – CLICK TO VIEW<br\/>SOUR GRAPE – CLICK TO VIEW<br\/>SOUR GREEN APPLE – CLICK TO VIEW<br\/>ORANGE CREAMSICLE – CLICK TO VIE<br\/>RAINBOW SHERBET – CLICK TO VIEW<br\/>MANGOEY – CLICK TO VIEW<br\/>BLUE RAZZ SLUSHIE – CLICK TO VIEW<\/p>"
+          }
         }
-    },
-    "order": ["main"]
+      },
+      "block_order": [
+        "question_answer_UR4zdb",
+        "question_answer_zhtGar",
+        "question_answer_xmJzd9",
+        "question_answer_wUX78T",
+        "question_answer_AtMH9T",
+        "question_answer_4pcbPX",
+        "question_answer_VEXALn",
+        "question_answer_ACTBTz"
+      ],
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "full_width": true,
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
 }
