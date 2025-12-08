@@ -1,0 +1,411 @@
+{% liquid
+  assign video_url = section.settings.video_url
+  assign video_type = section.settings.video_type
+  assign video_autoplay = section.settings.video_autoplay
+  assign video_loop = section.settings.video_loop
+  assign video_controls = section.settings.video_controls
+  assign video_muted = section.settings.video_muted
+  assign preview_image = section.settings.preview_image
+  assign video_height = section.settings.video_height
+%}
+
+<div class="hero-media-wrapper{% if section.settings.fullscreen == false %} section {% else %} hero-media-wrapper--fullscreen {% endif %}" {{ section.shopify_attributes }}>
+  {% if video_url != blank %}
+    <div class="hero-media-container" style="{% if video_height != blank %}height: {{ video_height }}px;{% endif %}">
+      {% if video_type == 'youtube' or video_type == 'vimeo' or video_type == 'videopress' %}
+        {% liquid
+          if video_type == 'youtube'
+            # Extract YouTube video ID from URL
+            assign video_id = video_url
+            if video_url contains 'youtube.com/watch?v='
+              assign video_id = video_url | split: 'v=' | last | split: '&' | first
+            elsif video_url contains 'youtu.be/'
+              assign video_id = video_url | split: 'youtu.be/' | last | split: '?' | first
+            elsif video_url contains 'youtube.com/embed/'
+              assign video_id = video_url | split: 'embed/' | last | split: '?' | first
+            endif
+            
+            assign embed_url = 'https://www.youtube.com/embed/' | append: video_id | append: '?'
+            if video_autoplay
+              assign embed_url = embed_url | append: 'autoplay=1&mute=1&'
+            endif
+            if video_loop
+              assign embed_url = embed_url | append: 'loop=1&playlist=' | append: video_id | append: '&'
+            endif
+            unless video_controls
+              assign embed_url = embed_url | append: 'controls=0&'
+            endunless
+            assign embed_url = embed_url | append: 'rel=0&modestbranding=1'
+          elsif video_type == 'vimeo'
+            # Extract Vimeo video ID from URL
+            assign video_id = video_url
+            if video_url contains 'vimeo.com/'
+              assign video_id = video_url | split: 'vimeo.com/' | last | split: '/' | last | split: '?' | first
+            elsif video_url contains 'player.vimeo.com/video/'
+              assign video_id = video_url | split: 'video/' | last | split: '?' | first
+            endif
+            
+            assign embed_url = 'https://player.vimeo.com/video/' | append: video_id | append: '?'
+            if video_autoplay
+              assign embed_url = embed_url | append: 'autoplay=1&muted=1&'
+            endif
+            if video_loop
+              assign embed_url = embed_url | append: 'loop=1&'
+            endif
+            unless video_controls
+              assign embed_url = embed_url | append: 'controls=0&'
+            endunless
+          elsif video_type == 'videopress'
+            # Extract VideoPress video ID from URL
+            assign video_id = video_url
+            if video_url contains 'videopress.com/embed/'
+              assign video_id = video_url | split: 'embed/' | last | split: '?' | first | split: '/' | first
+            elsif video_url contains 'videopress.com/v/'
+              assign video_id = video_url | split: 'v/' | last | split: '?' | first | split: '/' | first
+            endif
+            
+            # Build VideoPress embed URL with proper parameter format
+            assign embed_url = 'https://videopress.com/embed/' | append: video_id | append: '?'
+            if video_controls
+              assign embed_url = embed_url | append: 'controls=1&'
+            else
+              assign embed_url = embed_url | append: 'controls=0&'
+            endif
+            if video_autoplay
+              assign embed_url = embed_url | append: 'autoPlay=1&'
+            else
+              assign embed_url = embed_url | append: 'autoPlay=0&'
+            endif
+            if video_muted
+              assign embed_url = embed_url | append: 'muted=1&'
+            else
+              assign embed_url = embed_url | append: 'muted=0&'
+            endif
+            if video_loop
+              assign embed_url = embed_url | append: 'loop=1&'
+            else
+              assign embed_url = embed_url | append: 'loop=0&'
+            endif
+            assign embed_url = embed_url | append: 'playsinline=1'
+          endif
+        %}
+        
+        {% if video_type == 'videopress' %}
+          <div class="video-wrap">
+            <iframe
+              src="{{ embed_url }}"
+              width="100%"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              loading="lazy"
+              title="VideoPress video">
+            </iframe>
+          </div>
+        {% else %}
+          <div class="hero-media-embed">
+            <iframe
+              src="{{ embed_url }}"
+              class="hero-media-iframe"
+              allow="autoplay; encrypted-media; fullscreen"
+              allowfullscreen
+              frameborder="0"
+              style="width: 100%; height: 100%;"
+            ></iframe>
+          </div>
+        {% endif %}
+      {% else %}
+        {% comment %} Direct video file URL {% endcomment %}
+        <video
+          class="hero-media-video"
+          {% if video_autoplay %}autoplay{% endif %}
+          {% if video_loop %}loop{% endif %}
+          {% if video_muted %}muted{% endif %}
+          {% if video_controls %}controls{% endif %}
+          playsinline
+          style="width: 100%; height: 100%; object-fit: cover;"
+        >
+          <source src="{{ video_url }}" type="video/mp4">
+          <source src="{{ video_url }}" type="video/webm">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+      
+      {% if preview_image != blank and video_autoplay == false %}
+        <div class="hero-media-preview" style="background-image: url('{{ preview_image | image_url: width: 1920 }}');">
+          <button class="hero-media-play-button" type="button" aria-label="Play video">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M6.25725 1.075C6.10279 0.977449 5.91041 0.974889 5.75365 1.06832C5.59689 1.16174 5.5 1.3367 5.5 1.52632V20.4737C5.5 20.6633 5.59689 20.8383 5.75365 20.9317C5.91041 21.0251 6.10279 21.0226 6.25725 20.925L21.2573 11.4513C21.4079 11.3562 21.5 11.1849 21.5 11C21.5 10.8151 21.4079 10.6438 21.2573 10.5487L6.25725 1.075Z"
+                    fill="white"
+                />
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="hero-media-placeholder">
+      {% if preview_image != blank %}
+        {{ preview_image | image_url: width: 1920 | image_tag: loading: 'lazy', alt: 'Hero media placeholder' }}
+      {% else %}
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  #shopify-section-{{ section.id }} .hero-media-wrapper {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
+  }
+
+  #shopify-section-{{ section.id }} .video-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .video-wrap,
+  #shopify-section-{{ section.id }} .video-wrap iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-embed {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-embed {
+    padding-bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-play-button {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-play-button:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  #shopify-section-{{ section.id }} .hero-media-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+  }
+
+    @media(max-width: 999px) {
+        #shopify-section-{{ section.id }} .hero-media-container {
+            height: 450px !important;
+        }
+    }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .hero-media-container {
+        height: 300px !important;
+    }
+    #shopify-section-{{ section.id }} .hero-media-wrapper--fullscreen {
+      min-height: 300px;
+    }
+
+    #shopify-section-{{ section.id }} .video-wrap {
+      max-width: 100% !important;
+    }
+
+    #shopify-section-{{ section.id }} .video-wrap iframe {
+      height: auto !important;
+      min-height: 300px;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const playButton = document.querySelector('#shopify-section-{{ section.id }} .hero-media-play-button');
+    const preview = document.querySelector('#shopify-section-{{ section.id }} .hero-media-preview');
+    const video = document.querySelector('#shopify-section-{{ section.id }} .hero-media-video');
+    const iframe = document.querySelector('#shopify-section-{{ section.id }} .hero-media-iframe');
+    const videoPressIframe = document.querySelector('#shopify-section-{{ section.id }} .video-wrap iframe');
+    
+    if (playButton && preview) {
+      playButton.addEventListener('click', function() {
+        preview.style.display = 'none';
+        
+        if (video) {
+          video.play();
+        } else if (iframe) {
+          // For YouTube/Vimeo, we need to trigger autoplay
+          const src = iframe.src;
+          if (src.includes('youtube.com')) {
+            iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+          } else if (src.includes('vimeo.com')) {
+            iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+          }
+        } else if (videoPressIframe) {
+          // For VideoPress, update the autoPlay parameter
+          const src = videoPressIframe.src;
+          if (src.includes('autoPlay=0')) {
+            videoPressIframe.src = src.replace('autoPlay=0', 'autoPlay=1');
+          } else if (!src.includes('autoPlay=')) {
+            videoPressIframe.src = src + (src.includes('?') ? '&' : '?') + 'autoPlay=1';
+          }
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Hero Media",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Enter YouTube, Vimeo, VideoPress, or direct video file URL"
+    },
+    {
+      "type": "select",
+      "id": "video_type",
+      "label": "Video Type",
+      "options": [
+        {
+          "value": "youtube",
+          "label": "YouTube"
+        },
+        {
+          "value": "vimeo",
+          "label": "Vimeo"
+        },
+        {
+          "value": "videopress",
+          "label": "VideoPress"
+        },
+        {
+          "value": "direct",
+          "label": "Direct Video File"
+        }
+      ],
+      "default": "videopress"
+    },
+    {
+      "type": "image_picker",
+      "id": "preview_image",
+      "label": "Preview Image",
+      "info": "Image shown before video plays (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Video Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show Controls",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_muted",
+      "label": "Muted",
+      "default": false,
+      "info": "Required for autoplay in most browsers"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullscreen",
+      "label": "Fullscreen",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "video_height",
+      "label": "Video Height",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 600,
+      "info": "Only applies when fullscreen is disabled"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Media"
+    }
+  ]
+}
+{% endschema %}
